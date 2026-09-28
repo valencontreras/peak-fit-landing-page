@@ -158,11 +158,26 @@
     @apply border-border outline-ring/50;
   }
   html {
+    scroll-padding-top: 6rem;
     scroll-behavior: smooth;
+    /* The testimonials carousel (a nested scroller) must never extend the page to
+       the right, otherwise the browser paints an empty horizontal scrollbar. */
+    overflow-x: clip;
+  }
+  /* Fallback for browsers without `clip` support (older Safari). */
+  @supports not (overflow-x: clip) {
+    html {
+      overflow-x: hidden;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
   body {
     @apply bg-background text-foreground;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-inter), ui-sans-serif, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
   }
 }
 
@@ -172,6 +187,7 @@
   --paper: #f5f6f4;
   --lime: #d9ff24;
   --lime-light: #e8ff72;
+  --section-dark: #111719;
 }
 
 @theme inline {
@@ -180,25 +196,26 @@
   --color-paper: var(--paper);
   --color-lime: var(--lime);
   --color-lime-light: var(--lime-light);
-  --font-heading: Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 
 .hero-section {
   background:
-    linear-gradient(90deg, rgba(7, 10, 11, .96) 0%, rgba(7, 10, 11, .72) 42%, rgba(7, 10, 11, .2) 100%),
-    linear-gradient(0deg, rgba(7, 10, 11, .58), transparent 45%),
-    url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=2200&q=90') center/cover;
+    linear-gradient(90deg, rgba(7, 10, 11, .96) 0%, rgba(7, 10, 11, .74) 42%, rgba(7, 10, 11, .18) 100%),
+    linear-gradient(0deg, rgba(7, 10, 11, .62), transparent 45%),
+    url('/peak-fit-club-header.png') center top / cover #0a0e0f;
 }
 
 .benefit-strip,
 .contact-section {
-  background: #111719;
+  background: var(--section-dark);
 }
 
 .plans-section {
   background:
-    linear-gradient(rgba(10, 13, 14, .92), rgba(10, 13, 14, .95)),
-    url('https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=2200&q=85') center/cover;
+    linear-gradient(rgba(10, 13, 14, .93), rgba(10, 13, 14, .96)),
+    url('https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=2200&q=85') center/cover #0a0d0e;
 }
 
 .eyebrow {
@@ -206,30 +223,34 @@
   font-weight: 800;
   letter-spacing: .28em;
   text-transform: uppercase;
-  color: #5e686d;
 }
 
 .section-title {
   margin-top: 12px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(2rem, 3vw, 2.65rem);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 3vw, 2.6rem);
   font-weight: 900;
   line-height: .98;
-  letter-spacing: -.05em;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+
+.section-title-sm {
+  font-size: clamp(1.65rem, 2.3vw, 2.1rem);
 }
 
 .body-copy {
-  max-width: 330px;
-  margin: 18px 0 22px;
-  color: rgba(16, 20, 23, .68);
+  max-width: 22rem;
+  margin: 18px 0 24px;
   font-size: 13px;
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
 .nav-link {
   position: relative;
-  color: rgba(255,255,255,.78);
-  font-size: 11px;
+  color: rgba(255, 255, 255, .78);
+  font-size: 13px;
+  font-weight: 500;
   transition: color .2s ease;
 }
 
@@ -248,26 +269,16 @@
   content: '';
 }
 
-.logo-mark {
-  display: inline-grid;
-  width: 23px;
-  height: 20px;
-  place-items: center;
-  color: var(--lime);
-  font-size: 23px;
-  line-height: 1;
-  transform: scaleX(1.15);
-}
-
 .form-input {
   width: 100%;
-  border: 1px solid rgba(255,255,255,.22);
-  border-radius: 4px;
-  background: rgba(255,255,255,.04);
-  padding: 11px 12px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .05);
+  padding: 12px 13px;
   color: white;
-  font-size: 11px;
+  font-size: 12px;
   outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
 }
 
 .form-input::placeholder { color: rgba(255,255,255,.58); }
@@ -277,25 +288,70 @@ select.form-input option { color: var(--ink); }
 .map-card {
   position: relative;
   display: flex;
-  min-height: 265px;
+  min-height: 300px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-direction: column;
-  border-radius: 8px;
-  background: #242c30;
+  border-radius: 10px;
+  background: radial-gradient(120% 120% at 25% 20%, #303a3f 0%, #1c2429 55%, #131a1e 100%);
 }
 
 .map-grid {
   position: absolute;
   inset: -20%;
-  opacity: .55;
-  background-image: linear-gradient(28deg, transparent 43%, rgba(255,255,255,.15) 44%, transparent 45%), linear-gradient(112deg, transparent 47%, rgba(255,255,255,.12) 48%, transparent 49%), linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
-  background-size: 180px 140px, 220px 180px, 30px 30px, 30px 30px;
-  transform: rotate(-12deg) scale(1.25);
+  opacity: .5;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .07) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+  background-size: 22px 22px, 22px 22px, 110px 110px, 110px 110px;
+  transform: rotate(-10deg) scale(1.3);
+}
+
+.map-streets {
+  position: absolute;
+  inset: -25%;
+  opacity: .8;
+  background-image:
+    linear-gradient(28deg, transparent 43.2%, rgba(255, 255, 255, .16) 43.4%, rgba(255, 255, 255, .16) 44.4%, transparent 44.6%),
+    linear-gradient(112deg, transparent 47%, rgba(255, 255, 255, .13) 47.2%, rgba(255, 255, 255, .13) 48.2%, transparent 48.4%),
+    linear-gradient(72deg, transparent 61%, rgba(255, 255, 255, .1) 61.2%, rgba(255, 255, 255, .1) 62%, transparent 62.2%);
+  background-size: 330px 270px, 430px 350px, 270px 230px;
+  transform: rotate(-10deg) scale(1.35);
+}
+
+.map-label {
+  position: absolute;
+  color: rgba(255, 255, 255, .38);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @media (max-width: 640px) {
-  .hero-section { min-height: 720px; background-position: 62% center; }
-  .nav-link.active::after { display: none; }
+  .hero-section {
+    min-height: 680px;
+    background-position: center;
+  }
+
+  .nav-link.active::after {
+    display: none;
+  }
+
+  .map-card {
+    min-height: 240px;
+  }
 }
